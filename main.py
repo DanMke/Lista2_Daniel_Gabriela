@@ -32,7 +32,8 @@ MIN_HEIGHT = 10
 MAX_HEIGHT = 580
 RECTANGLE_THICKNESS = 8
 
-WAIT_CONSTANT = 5
+WAIT_SELECTION_SORT = 5
+WAIT_INSERTION_SORT = 100
 
 def text(background, message, color, size, coordinate_x, coordinate_y):
     font = pygame.font.SysFont(None, size)
@@ -52,11 +53,11 @@ class Rectangle():
         pygame.draw.rect(background, self.color, [self.pos_x, self.pos_y, self.width, self.height])
 
     # Quando for atualizar apenas um dos retangulos e ele nao tiver trocado de posicao
-    def update_rectangle_in_screen_animation(self, color, background):
+    def update_rectangle_in_screen_animation(self, color, background, wait):
         self.color = color
         self.render(background)
         pygame.display.update()
-        pygame.time.wait(WAIT_CONSTANT)
+        pygame.time.wait(wait)
 
 
 class Rectangles():
@@ -74,11 +75,11 @@ class Rectangles():
             initial_pos_x += RECTANGLE_THICKNESS + MARGIN
 
     # Quando for atualizar todos os retangulos porque teve troca de posicao (quando troca de posicao tem que desenhar tudo na tela novamente)
-    def update_set_rectangles_in_screen_animation(self, background):
+    def update_set_rectangles_in_screen_animation(self, background, wait):
         background.fill(SCREEN_BACKGROUND_COLOR)
         self.render(background)
         pygame.display.update()
-        pygame.time.wait(WAIT_CONSTANT)
+        pygame.time.wait(wait)
 
 
 class Game():
@@ -120,6 +121,9 @@ class Game():
                     if event.key == pygame.K_s:
                         print("chamou selection sort")
                         selection_sort(self.rectangles, self.background)
+                    if event.key == pygame.K_i:
+                        print("chamou insertion sort")
+                        insertion_sort(self.rectangles, self.background)
             
             self.render()
             pygame.display.update()
@@ -132,19 +136,19 @@ def selection_sort(rectangles, background):
     for i in range(len(rectangles.set_rectangles)):
         min_index = i
 
-        rectangles.set_rectangles[min_index].update_rectangle_in_screen_animation(RED, background)
+        rectangles.set_rectangles[min_index].update_rectangle_in_screen_animation(RED, background, WAIT_SELECTION_SORT)
 
         for j in range(i + 1, len(rectangles.set_rectangles)):
 
             if j > 0 and rectangles.set_rectangles[j - 1].color == BLUE:
-                rectangles.set_rectangles[j - 1].update_rectangle_in_screen_animation(WHITE, background)
+                rectangles.set_rectangles[j - 1].update_rectangle_in_screen_animation(WHITE, background, WAIT_SELECTION_SORT)
     
-            rectangles.set_rectangles[j].update_rectangle_in_screen_animation(BLUE, background)
+            rectangles.set_rectangles[j].update_rectangle_in_screen_animation(BLUE, background, WAIT_SELECTION_SORT)
 
             if rectangles.set_rectangles[j].height < rectangles.set_rectangles[min_index].height:
 
-                rectangles.set_rectangles[min_index].update_rectangle_in_screen_animation(WHITE, background)
-                rectangles.set_rectangles[j].update_rectangle_in_screen_animation(RED, background)
+                rectangles.set_rectangles[min_index].update_rectangle_in_screen_animation(WHITE, background, WAIT_SELECTION_SORT)
+                rectangles.set_rectangles[j].update_rectangle_in_screen_animation(RED, background, WAIT_SELECTION_SORT)
 
                 min_index = j
 
@@ -157,9 +161,34 @@ def selection_sort(rectangles, background):
 
         rectangles.set_rectangles[i].color = GREEN
         
-        rectangles.update_set_rectangles_in_screen_animation(background)
+        rectangles.update_set_rectangles_in_screen_animation(background, WAIT_SELECTION_SORT)
 
-# TODO: Insertion Sort
+# Insertion Sort
+def insertion_sort(rectangles, background):
+
+    # pinta o rectangles.set_rectangles[0] de verde e renderiza
+    rectangles.set_rectangles[0].update_rectangle_in_screen_animation(GREEN, background, WAIT_INSERTION_SORT)
+    for i in range(1, len(rectangles.set_rectangles)):
+        j = i
+        # pinta o vector[j] de vermelho e renderiza
+        rectangles.set_rectangles[j].update_rectangle_in_screen_animation(RED, background, WAIT_INSERTION_SORT)
+        while ((j != 0) and rectangles.set_rectangles[j].height < rectangles.set_rectangles[j - 1].height):
+            # troca ate chegar na posicao dele
+            # ao trocar renderiza todos os rect novamente
+            rectangles.set_rectangles[j - 1].color = GREEN
+
+            aux = rectangles.set_rectangles[j]
+            rectangles.set_rectangles[j] = rectangles.set_rectangles[j - 1]
+            rectangles.set_rectangles[j - 1] = aux
+
+            rectangles.update_set_rectangles_in_screen_animation(background, WAIT_INSERTION_SORT)
+            j -= 1
+        # pinta o rectangles.set_rectangles[j] de verde e renderiza
+        rectangles.set_rectangles[j].update_rectangle_in_screen_animation(GREEN, background, WAIT_INSERTION_SORT)
+
+# TODO: MENU
+# TODO: Legenda
+# TODO: Retry
 # TODO: Bubble Sort
 # TODO: Shell Sort
 
