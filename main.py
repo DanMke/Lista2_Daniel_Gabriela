@@ -35,7 +35,7 @@ RECTANGLE_THICKNESS = 8
 WAIT_SELECTION_SORT = 5
 WAIT_INSERTION_SORT = 80
 WAIT_BUBBLE_SORT = 50
-WAIT_SHELL_SORT = 100
+WAIT_SHELL_SORT = 300
 
 def text(background, message, color, size, coordinate_x, coordinate_y):
     font = pygame.font.SysFont(None, size)
@@ -222,7 +222,39 @@ def bubble_sort(rectangles, background):
 
 # Shell Sort
 def shell_sort(rectangles, background):
-    pass
+    # determina gap inicial como tamanho do vetor dividido por 2
+    gap = len(rectangles.set_rectangles) // 2
+    while gap > 0:
+        # loop começando de gap ate o tamanho do vetor
+        for i in range(gap, len(rectangles.set_rectangles)):
+            # pinta o rectangles.set_rectangles[i] de vermelho
+            rectangles.set_rectangles[i].update_rectangle_in_screen_animation(RED, background, WAIT_SHELL_SORT)
+            temp = rectangles.set_rectangles[i]
+            j = i
+            # comeca do gap e verifica se os elementos dentro do gap dele para tras estao ordenados
+            # rectangles.set_rectangles[j - gap].update_rectangle_in_screen_animation(BLUE, background, WAIT_SHELL_SORT)
+            while j >= gap and(rectangles.set_rectangles[j - gap].height > temp.height):
+                rectangles.set_rectangles[j].update_rectangle_in_screen_animation(RED, background, WAIT_SHELL_SORT)
+                # pinta rectangles.set_rectangles[j - gap] de azul  
+                rectangles.set_rectangles[j - gap].update_rectangle_in_screen_animation(BLUE, background, WAIT_SHELL_SORT)
+
+                rectangles.set_rectangles[j].update_rectangle_in_screen_animation(WHITE, background, WAIT_SHELL_SORT)
+
+                rectangles.set_rectangles[j] = rectangles.set_rectangles[j - gap]
+
+                rectangles.set_rectangles[j].color = WHITE
+
+                rectangles.update_set_rectangles_in_screen_animation(background, WAIT_SHELL_SORT)
+
+                j -= gap
+                
+            rectangles.set_rectangles[j] = temp
+            rectangles.set_rectangles[j].color = WHITE
+            rectangles.update_set_rectangles_in_screen_animation(background, WAIT_SHELL_SORT)
+        # divide o gap por 2
+        gap = gap // 2
+        # na ultima iteracao do gap quando comparar o vermelho com o azul
+        # os azuis se tornam verde por ja estarem ordenados
 
 # TODO: MENU
 # TODO: Legenda
