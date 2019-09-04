@@ -19,6 +19,8 @@ LIGHTBLUE = (60, 170, 255)
 DARKBLUE = (0, 101, 178)
 BEIGE = (178, 168, 152)
 
+SCREEN_BACKGROUND_COLOR = BLACK
+
 WIDTH = 1002
 HEIGHT = 600
 SCREEN_SIZE = (WIDTH, HEIGHT)
@@ -30,7 +32,7 @@ MIN_HEIGHT = 10
 MAX_HEIGHT = 580
 RECTANGLE_THICKNESS = 8
 
-WAIT_CONSTANT = 10
+WAIT_CONSTANT = 5
 
 def text(background, message, color, size, coordinate_x, coordinate_y):
     font = pygame.font.SysFont(None, size)
@@ -49,6 +51,13 @@ class Rectangle():
     def render(self, background):
         pygame.draw.rect(background, self.color, [self.pos_x, self.pos_y, self.width, self.height])
 
+    # Quando for atualizar apenas um dos retangulos e ele nao tiver trocado de posicao
+    def update_rectangle_in_screen_animation(self, color, background):
+        self.color = color
+        self.render(background)
+        pygame.display.update()
+        pygame.time.wait(WAIT_CONSTANT)
+
 
 class Rectangles():
     def __init__(self):
@@ -63,6 +72,13 @@ class Rectangles():
             rectangle.pos_x = initial_pos_x
             rectangle.render(background)
             initial_pos_x += RECTANGLE_THICKNESS + MARGIN
+
+    # Quando for atualizar todos os retangulos porque teve troca de posicao (quando troca de posicao tem que desenhar tudo na tela novamente)
+    def update_set_rectangles_in_screen_animation(self, background):
+        background.fill(SCREEN_BACKGROUND_COLOR)
+        self.render(background)
+        pygame.display.update()
+        pygame.time.wait(WAIT_CONSTANT)
 
 
 class Game():
@@ -88,7 +104,7 @@ class Game():
         return rectangles
 
     def render(self):
-        self.background.fill(BLACK)
+        self.background.fill(SCREEN_BACKGROUND_COLOR)
         self.rectangles.render(self.background)
     
     def run(self):
@@ -116,46 +132,32 @@ def selection_sort(rectangles, background):
     for i in range(len(rectangles.set_rectangles)):
         min_index = i
 
-        rectangles.set_rectangles[min_index].color = RED
-        rectangles.set_rectangles[min_index].render(background)
-        pygame.display.update()
-        pygame.time.wait(WAIT_CONSTANT)
+        rectangles.set_rectangles[min_index].update_rectangle_in_screen_animation(RED, background)
 
         for j in range(i + 1, len(rectangles.set_rectangles)):
 
             if j > 0 and rectangles.set_rectangles[j - 1].color == BLUE:
-                rectangles.set_rectangles[j - 1].color = WHITE
+                rectangles.set_rectangles[j - 1].update_rectangle_in_screen_animation(WHITE, background)
     
-            rectangles.set_rectangles[j].color = BLUE
-            background.fill(BLACK)
-            rectangles.render(background)
-            pygame.display.update()
-            pygame.time.wait(WAIT_CONSTANT)
+            rectangles.set_rectangles[j].update_rectangle_in_screen_animation(BLUE, background)
 
             if rectangles.set_rectangles[j].height < rectangles.set_rectangles[min_index].height:
 
-                rectangles.set_rectangles[min_index].color = WHITE
-                rectangles.set_rectangles[j].color = RED
-                background.fill(BLACK)
-                rectangles.render(background)
-                pygame.display.update()
-                pygame.time.wait(WAIT_CONSTANT)
+                rectangles.set_rectangles[min_index].update_rectangle_in_screen_animation(WHITE, background)
+                rectangles.set_rectangles[j].update_rectangle_in_screen_animation(RED, background)
 
                 min_index = j
 
-        if rectangles.set_rectangles[len(rectangles.set_rectangles) - 1].color == BLUE:
-            rectangles.set_rectangles[len(rectangles.set_rectangles) - 1].color = WHITE
-        
         aux_rectangle = rectangles.set_rectangles[i]
         rectangles.set_rectangles[i] = rectangles.set_rectangles[min_index]
         rectangles.set_rectangles[min_index] = aux_rectangle
 
+        if rectangles.set_rectangles[len(rectangles.set_rectangles) - 1].color == BLUE:
+            rectangles.set_rectangles[len(rectangles.set_rectangles) - 1].color = WHITE
 
         rectangles.set_rectangles[i].color = GREEN
-        background.fill(BLACK)
-        rectangles.render(background)
-        pygame.display.update()
-        pygame.time.wait(WAIT_CONSTANT)
+        
+        rectangles.update_set_rectangles_in_screen_animation(background)
 
 # TODO: Insertion Sort
 # TODO: Bubble Sort
