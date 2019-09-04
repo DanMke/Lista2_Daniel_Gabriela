@@ -33,7 +33,9 @@ MAX_HEIGHT = 580
 RECTANGLE_THICKNESS = 8
 
 WAIT_SELECTION_SORT = 5
-WAIT_INSERTION_SORT = 100
+WAIT_INSERTION_SORT = 80
+WAIT_BUBBLE_SORT = 50
+WAIT_SHELL_SORT = 100
 
 def text(background, message, color, size, coordinate_x, coordinate_y):
     font = pygame.font.SysFont(None, size)
@@ -124,6 +126,12 @@ class Game():
                     if event.key == pygame.K_i:
                         print("chamou insertion sort")
                         insertion_sort(self.rectangles, self.background)
+                    if event.key == pygame.K_b:
+                        print("chamou bubble sort")
+                        bubble_sort(self.rectangles, self.background)
+                    if event.key == pygame.K_h:
+                        print("chamou shell sort")
+                        shell_sort(self.rectangles, self.background)
             
             self.render()
             pygame.display.update()
@@ -170,7 +178,7 @@ def insertion_sort(rectangles, background):
     rectangles.set_rectangles[0].update_rectangle_in_screen_animation(GREEN, background, WAIT_INSERTION_SORT)
     for i in range(1, len(rectangles.set_rectangles)):
         j = i
-        # pinta o vector[j] de vermelho e renderiza
+        # pinta o rectangles.set_rectangles[j] de vermelho e renderiza
         rectangles.set_rectangles[j].update_rectangle_in_screen_animation(RED, background, WAIT_INSERTION_SORT)
         while ((j != 0) and rectangles.set_rectangles[j].height < rectangles.set_rectangles[j - 1].height):
             # troca ate chegar na posicao dele
@@ -186,11 +194,39 @@ def insertion_sort(rectangles, background):
         # pinta o rectangles.set_rectangles[j] de verde e renderiza
         rectangles.set_rectangles[j].update_rectangle_in_screen_animation(GREEN, background, WAIT_INSERTION_SORT)
 
+
+# Bubble Sort
+# a cada iteracao ele leva um maior para sua posicao final
+def bubble_sort(rectangles, background):
+    for i in range(len(rectangles.set_rectangles)):
+        # i elementos ordenados ao final
+        # pinta rectangles.set_rectangles[j] de vermelho e renderiza
+        for j in range(len(rectangles.set_rectangles) - i - 1):
+            rectangles.set_rectangles[j].update_rectangle_in_screen_animation(RED, background, WAIT_BUBBLE_SORT)
+            if rectangles.set_rectangles[j].height > rectangles.set_rectangles[j + 1].height:
+                aux = rectangles.set_rectangles[j]
+                rectangles.set_rectangles[j] = rectangles.set_rectangles [j + 1]
+                rectangles.set_rectangles[j + 1] = aux
+                # mantem cores
+                # faz a troca de posicao e renderiza tudo novamente
+                rectangles.update_set_rectangles_in_screen_animation(background, WAIT_BUBBLE_SORT)
+            else:
+                rectangles.set_rectangles[j].update_rectangle_in_screen_animation(WHITE, background, WAIT_BUBBLE_SORT)
+                rectangles.set_rectangles[j + 1].update_rectangle_in_screen_animation(RED, background, WAIT_BUBBLE_SORT)
+                # pinta o novo maior de vermelho
+                # pinta o antigo vermelho de branco
+                # pinta rectangles.set_rectangles[j] de branco e renderiza
+                # pinta rectangles.set_rectangles[j + 1] de vermelho e renderiza
+        # pinta o ultimo de verde e renderiza
+        rectangles.set_rectangles[len(rectangles.set_rectangles) - i - 1].update_rectangle_in_screen_animation(GREEN, background, WAIT_BUBBLE_SORT)
+
+# Shell Sort
+def shell_sort(rectangles, background):
+    pass
+
 # TODO: MENU
 # TODO: Legenda
 # TODO: Retry
-# TODO: Bubble Sort
-# TODO: Shell Sort
 
 def main():
     mygame = Game()
