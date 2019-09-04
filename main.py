@@ -35,6 +35,7 @@ def text(background, message, color, size, coordinate_x, coordinate_y):
     text = font.render(message, True, color)
     background.blit(text, [coordinate_x, coordinate_y])
 
+
 class Rectangle():
     def __init__(self, height, width, color, pos_x, pos_y):
         self.height = height
@@ -55,8 +56,11 @@ class Rectangles():
         self.set_rectangles.append(rectangle)
 
     def render(self, background):
+        initial_pos_x = MARGIN
         for rectangle in self.set_rectangles:
+            rectangle.pos_x = initial_pos_x
             rectangle.render(background)
+            initial_pos_x += RECTANGLE_THICKNESS + MARGIN
 
 
 class Game():
@@ -95,6 +99,9 @@ class Game():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         exit = True
+                    if event.key == pygame.K_s:
+                        print("chamou selection sort")
+                        selection_sort(self.rectangles, self.background)
             
             self.render()
             pygame.display.update()
@@ -102,7 +109,27 @@ class Game():
         pygame.quit()
         sys.exit(0)
 
-# TODO: Selection Sort
+# Selection Sort
+def selection_sort(rectangles, background):
+    for i in range(len(rectangles.set_rectangles)):
+        min_index = i
+        for j in range(i + 1, len(rectangles.set_rectangles)):
+            # Pinta o rectangle[j] de azul
+            if rectangles.set_rectangles[j].height < rectangles.set_rectangles[min_index].height:
+                # pinta o antigo de branco
+                # pinta o novo de vermelho
+                min_index = j
+        # Pinta o que estava de azul de branco
+        aux_rectangle = rectangles.set_rectangles[i]
+        rectangles.set_rectangles[i] = rectangles.set_rectangles[min_index]
+        rectangles.set_rectangles[min_index] = aux_rectangle
+
+        rectangles.set_rectangles[i].color = GREEN
+        background.fill(BLACK)
+        rectangles.render(background)
+        pygame.display.update()
+        pygame.time.wait(100)
+
 # TODO: Insertion Sort
 # TODO: Bubble Sort
 # TODO: Shell Sort
