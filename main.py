@@ -89,9 +89,12 @@ class Game():
         exit = False
         
         while not exit:
-            # for event in pygame.event.get():
-            if pygame.event.get(pygame.QUIT) or pygame.key.get_pressed()[pygame.K_ESCAPE]:
-                exit = True
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    exit = True
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        exit = True
             
             self.render()
             pygame.display.update()
