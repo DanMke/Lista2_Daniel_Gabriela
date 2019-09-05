@@ -35,7 +35,7 @@ RECTANGLE_THICKNESS = 8
 WAIT_SELECTION_SORT = 5
 WAIT_INSERTION_SORT = 80
 WAIT_BUBBLE_SORT = 50
-WAIT_SHELL_SORT = 300
+WAIT_SHELL_SORT = 100
 
 def text(background, message, color, size, coordinate_x, coordinate_y):
     font = pygame.font.SysFont(None, size)
@@ -227,30 +227,51 @@ def shell_sort(rectangles, background):
     while gap > 0:
         # loop começando de gap ate o tamanho do vetor
         for i in range(gap, len(rectangles.set_rectangles)):
+            if(gap == 1):
+                last = True
+            else:
+                last = False
+            
+            if(i < len(rectangles.set_rectangles) - gap):
+                rectangles.set_rectangles[i+gap].update_rectangle_in_screen_animation(WHITE, background, WAIT_SHELL_SORT)      
             # pinta o rectangles.set_rectangles[i] de vermelho
             rectangles.set_rectangles[i].update_rectangle_in_screen_animation(RED, background, WAIT_SHELL_SORT)
-            temp = rectangles.set_rectangles[i]
             j = i
             # comeca do gap e verifica se os elementos dentro do gap dele para tras estao ordenados
             # rectangles.set_rectangles[j - gap].update_rectangle_in_screen_animation(BLUE, background, WAIT_SHELL_SORT)
-            while j >= gap and(rectangles.set_rectangles[j - gap].height > temp.height):
-                rectangles.set_rectangles[j].update_rectangle_in_screen_animation(RED, background, WAIT_SHELL_SORT)
-                # pinta rectangles.set_rectangles[j - gap] de azul  
-                rectangles.set_rectangles[j - gap].update_rectangle_in_screen_animation(BLUE, background, WAIT_SHELL_SORT)
+            while j >= gap:
+                temp = rectangles.set_rectangles[j]
 
-                rectangles.set_rectangles[j].update_rectangle_in_screen_animation(WHITE, background, WAIT_SHELL_SORT)
+                if(not last):
+                    rectangles.set_rectangles[j - gap -1].update_rectangle_in_screen_animation(WHITE, background, WAIT_SHELL_SORT)
 
-                rectangles.set_rectangles[j] = rectangles.set_rectangles[j - gap]
+                    rectangles.set_rectangles[j].update_rectangle_in_screen_animation(WHITE, background, WAIT_SHELL_SORT)
+                
+                if(rectangles.set_rectangles[j - gap].height > rectangles.set_rectangles[j].height):
+                    if(not last):
+                        #pinta o retangulo a ser trocado de laranja
+                        rectangles.set_rectangles[j - gap].update_rectangle_in_screen_animation(LIGHTORANGE, background, WAIT_SHELL_SORT)
+                    else:
+                        rectangles.set_rectangles[j - gap].update_rectangle_in_screen_animation(GREEN, background, WAIT_SHELL_SORT)
 
-                rectangles.set_rectangles[j].color = WHITE
+                    #troca o ret da pos j com o da pos j-1
+                    rectangles.set_rectangles[j] = rectangles.set_rectangles[j - gap]
+                    rectangles.set_rectangles[j - gap] = temp              
 
-                rectangles.update_set_rectangles_in_screen_animation(background, WAIT_SHELL_SORT)
+                    rectangles.set_rectangles[j].color = WHITE
+
+                    rectangles.update_set_rectangles_in_screen_animation(background, WAIT_SHELL_SORT)
+                    
+                else:
+                    if(not last):
+                        rectangles.set_rectangles[j - gap].update_rectangle_in_screen_animation(BLUE, background, WAIT_SHELL_SORT)
+                    else:
+                        rectangles.set_rectangles[j - gap].update_rectangle_in_screen_animation(GREEN, background, WAIT_SHELL_SORT)
 
                 j -= gap
-                
-            rectangles.set_rectangles[j] = temp
-            rectangles.set_rectangles[j].color = WHITE
-            rectangles.update_set_rectangles_in_screen_animation(background, WAIT_SHELL_SORT)
+
+                rectangles.update_set_rectangles_in_screen_animation(background, WAIT_SHELL_SORT)
+            
         # divide o gap por 2
         gap = gap // 2
         # na ultima iteracao do gap quando comparar o vermelho com o azul
