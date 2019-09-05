@@ -21,7 +21,8 @@ BEIGE = (178, 168, 152)
 
 SCREEN_BACKGROUND_COLOR = BLACK
 
-WIDTH = 1002
+SCREEN_MENU = 200
+WIDTH = 1002 + SCREEN_MENU
 HEIGHT = 600
 SCREEN_SIZE = (WIDTH, HEIGHT)
 
@@ -95,6 +96,8 @@ class Game():
         pygame.display.set_caption('Sort O(n²)')
         self.rectangles = self.create_rectangles()
 
+        self.stoped = True
+
     def create_rectangles(self):
         rectangles = Rectangles()
         initial_pos_x = MARGIN
@@ -109,7 +112,14 @@ class Game():
     def render(self):
         self.background.fill(SCREEN_BACKGROUND_COLOR)
         self.rectangles.render(self.background)
-    
+
+        if self.stoped:
+            text(self.background, "(s) Selection Sort", ORANGE, 25, 1042, 20)
+            text(self.background, "(i) Insertion Sort", ORANGE, 25, 1042, 50)
+            text(self.background, "(b) Bubble Sort", ORANGE, 25, 1042, 80)
+            text(self.background, "(h) Shell Sort", ORANGE, 25, 1042, 110)
+            text(self.background, "(r) Retry", ORANGE, 25, 1042, 140)
+
     def run(self):
         exit = False
         
@@ -122,16 +132,26 @@ class Game():
                         exit = True
                     if event.key == pygame.K_s:
                         print("chamou selection sort")
+                        self.stoped = False
                         selection_sort(self.rectangles, self.background)
+                        self.stoped = True
                     if event.key == pygame.K_i:
                         print("chamou insertion sort")
+                        self.stoped = False
                         insertion_sort(self.rectangles, self.background)
+                        self.stoped = True
                     if event.key == pygame.K_b:
                         print("chamou bubble sort")
+                        self.stoped = False
                         bubble_sort(self.rectangles, self.background)
+                        self.stoped = True
                     if event.key == pygame.K_h:
                         print("chamou shell sort")
+                        self.stoped = False
                         shell_sort(self.rectangles, self.background)
+                        self.stoped = True
+                    if event.key == pygame.K_r:
+                        main()
             
             self.render()
             pygame.display.update()
@@ -234,39 +254,20 @@ def shell_sort(rectangles, background):
 
             # pinta o rectangles.set_rectangles[i] de vermelho
             rectangles.set_rectangles[i].update_rectangle_in_screen_animation(RED, background, WAIT_SHELL_SORT)
+            temp = rectangles.set_rectangles[i]
             j = i
             # comeca do gap e verifica se os elementos dentro do gap dele para tras estao ordenados
             # rectangles.set_rectangles[j - gap].update_rectangle_in_screen_animation(BLUE, background, WAIT_SHELL_SORT)
-            while j >= gap:
-                temp = rectangles.set_rectangles[j]
+            while j >= gap and(rectangles.set_rectangles[j - gap].height > temp.height):
+                rectangles.set_rectangles[j].update_rectangle_in_screen_animation(RED, background, WAIT_SHELL_SORT)
+                # pinta rectangles.set_rectangles[j - gap] de azul  
+                rectangles.set_rectangles[j - gap].update_rectangle_in_screen_animation(BLUE, background, WAIT_SHELL_SORT)
 
-                if(not last):
-                    rectangles.set_rectangles[j - gap -1].update_rectangle_in_screen_animation(WHITE, background, WAIT_SHELL_SORT)
+                rectangles.set_rectangles[j].update_rectangle_in_screen_animation(WHITE, background, WAIT_SHELL_SORT)
 
-                    rectangles.set_rectangles[j].update_rectangle_in_screen_animation(WHITE, background, WAIT_SHELL_SORT)
-                
-                if(rectangles.set_rectangles[j - gap].height > rectangles.set_rectangles[j].height):
-                    if(not last):
-                        #pinta o retangulo a ser trocado de laranja
-                        rectangles.set_rectangles[j - gap].update_rectangle_in_screen_animation(LIGHTORANGE, background, WAIT_SHELL_SORT)
-                    else:
-                        rectangles.set_rectangles[j - gap].update_rectangle_in_screen_animation(GREEN, background, WAIT_SHELL_SORT)
+                rectangles.set_rectangles[j] = rectangles.set_rectangles[j - gap]
 
-                    #troca o ret da pos j com o da pos j-1
-                    rectangles.set_rectangles[j] = rectangles.set_rectangles[j - gap]
-                    rectangles.set_rectangles[j - gap] = temp              
-
-                    rectangles.set_rectangles[j].color = WHITE
-
-                    rectangles.update_set_rectangles_in_screen_animation(background, WAIT_SHELL_SORT)
-                    
-                else:
-                    if(not last):
-                        rectangles.set_rectangles[j - gap].update_rectangle_in_screen_animation(BLUE, background, WAIT_SHELL_SORT)
-                    else:
-                        rectangles.set_rectangles[j - gap].update_rectangle_in_screen_animation(GREEN, background, WAIT_SHELL_SORT)
-
-                j -= gap
+                rectangles.set_rectangles[j].color = WHITE
 
                 rectangles.update_set_rectangles_in_screen_animation(background, WAIT_SHELL_SORT)
             
@@ -276,10 +277,6 @@ def shell_sort(rectangles, background):
         gap = gap // 2
         # na ultima iteracao do gap quando comparar o vermelho com o azul
         # os azuis se tornam verde por ja estarem ordenados
-
-# TODO: MENU
-# TODO: Legenda
-# TODO: Retry
 
 def main():
     mygame = Game()
