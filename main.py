@@ -35,7 +35,7 @@ RECTANGLE_THICKNESS = 8
 WAIT_SELECTION_SORT = 5
 WAIT_INSERTION_SORT = 80
 WAIT_BUBBLE_SORT = 50
-WAIT_SHELL_SORT = 100
+WAIT_SHELL_SORT = 50
 
 def text(background, message, color, size, coordinate_x, coordinate_y):
     font = pygame.font.SysFont(None, size)
@@ -231,9 +231,7 @@ def shell_sort(rectangles, background):
                 last = True
             else:
                 last = False
-            
-            if(i < len(rectangles.set_rectangles) - gap):
-                rectangles.set_rectangles[i+gap].update_rectangle_in_screen_animation(WHITE, background, WAIT_SHELL_SORT)      
+
             # pinta o rectangles.set_rectangles[i] de vermelho
             rectangles.set_rectangles[i].update_rectangle_in_screen_animation(RED, background, WAIT_SHELL_SORT)
             j = i
@@ -272,6 +270,8 @@ def shell_sort(rectangles, background):
 
                 rectangles.update_set_rectangles_in_screen_animation(background, WAIT_SHELL_SORT)
             
+            #Pinta o último azul de branco
+            rectangles.set_rectangles[j].update_rectangle_in_screen_animation(WHITE, background, WAIT_SHELL_SORT)
         # divide o gap por 2
         gap = gap // 2
         # na ultima iteracao do gap quando comparar o vermelho com o azul
