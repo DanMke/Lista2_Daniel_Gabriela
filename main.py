@@ -33,10 +33,10 @@ MIN_HEIGHT = 10
 MAX_HEIGHT = 580
 RECTANGLE_THICKNESS = 8
 
-WAIT_SELECTION_SORT = 3
+WAIT_SELECTION_SORT = 4
 WAIT_INSERTION_SORT = 60
-WAIT_BUBBLE_SORT = 5
-WAIT_SHELL_SORT = 50
+WAIT_BUBBLE_SORT = 4
+WAIT_SHELL_SORT = 15
 
 def text(background, message, color, size, coordinate_x, coordinate_y):
     font = pygame.font.SysFont(None, size)
