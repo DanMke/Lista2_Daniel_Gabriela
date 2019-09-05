@@ -124,34 +124,35 @@ class Game():
         exit = False
         
         while not exit:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    exit = True
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
+            if self.stoped:
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
                         exit = True
-                    if event.key == pygame.K_s:
-                        print("chamou selection sort")
-                        self.stoped = False
-                        selection_sort(self.rectangles, self.background)
-                        self.stoped = True
-                    if event.key == pygame.K_i:
-                        print("chamou insertion sort")
-                        self.stoped = False
-                        insertion_sort(self.rectangles, self.background)
-                        self.stoped = True
-                    if event.key == pygame.K_b:
-                        print("chamou bubble sort")
-                        self.stoped = False
-                        bubble_sort(self.rectangles, self.background)
-                        self.stoped = True
-                    if event.key == pygame.K_h:
-                        print("chamou shell sort")
-                        self.stoped = False
-                        shell_sort(self.rectangles, self.background)
-                        self.stoped = True
-                    if event.key == pygame.K_r:
-                        main()
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE:
+                            exit = True
+                        if event.key == pygame.K_s:
+                            print("chamou selection sort")
+                            self.stoped = False
+                            selection_sort(self.rectangles, self.background)
+                            self.stoped = True
+                        if event.key == pygame.K_i:
+                            print("chamou insertion sort")
+                            self.stoped = False
+                            insertion_sort(self.rectangles, self.background)
+                            self.stoped = True
+                        if event.key == pygame.K_b:
+                            print("chamou bubble sort")
+                            self.stoped = False
+                            bubble_sort(self.rectangles, self.background)
+                            self.stoped = True
+                        if event.key == pygame.K_h:
+                            print("chamou shell sort")
+                            self.stoped = False
+                            shell_sort(self.rectangles, self.background)
+                            self.stoped = True
+                        if event.key == pygame.K_r:
+                            main()
             
             self.render()
             pygame.display.update()
